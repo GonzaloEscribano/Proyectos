@@ -26,6 +26,27 @@ def elegir_componente(componentes):
     print()
     return int(input("Ingrese el ID del componente que elija: "))
 
+def recorrer_fuentes(conn, id_presupuesto_actual):
+    consulta = '''SELECT id_componente, nombre, precio FROM Componentes
+                WHERE id_categoria = 4'''
+    componentes = conn.execute(consulta)
+    
+    id_fuente_elegida = elegir_componente(componentes)
+    
+    guardar_componente_elegido(conn, id_presupuesto_actual, id_fuente_elegida)
+    calcular_monto(conn, id_presupuesto_actual)
+
+def recorrer_graficas(conn, id_presupuesto_actual):
+    consulta = '''SELECT id_componente, nombre, precio FROM Componentes
+                WHERE id_categoria = 3'''
+    componentes = conn.execute(consulta)
+    
+    id_grafica_elegida = elegir_componente(componentes)
+    
+    guardar_componente_elegido(conn, id_presupuesto_actual, id_grafica_elegida)
+    recorrer_fuentes(conn, id_presupuesto_actual)
+    
+
 def recorrer_rams(conn, tipo_ram, id_presupuesto_actual):
     consulta = '''SELECT id_componente, nombre, precio FROM Componentes
                 WHERE id_categoria = 5 AND especificacion_clave LIKE ?'''
@@ -34,7 +55,7 @@ def recorrer_rams(conn, tipo_ram, id_presupuesto_actual):
     id_ram_elegida = elegir_componente(componentes)
     
     guardar_componente_elegido(conn, id_presupuesto_actual, id_ram_elegida)
-    calcular_monto(conn, id_presupuesto_actual)
+    recorrer_graficas(conn, id_presupuesto_actual)
 
 def recorrer_mothers(conn, socket_procesador, id_presupuesto_actual):
     consulta = '''SELECT id_componente, nombre, precio FROM Componentes 
